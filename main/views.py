@@ -72,7 +72,6 @@ def nuclei(request):
     return render(request, 'main/nuclei.html', {'title': 'Nuclei Scans', 'nuclei_scans': nuclei_scans})
 
 @login_required
-@ratelimit(key='user', rate='3/m')
 def nuclei_results(request, nuclei_results_id):
     if request.method == "POST":
         ID = request.POST['id']
@@ -356,13 +355,9 @@ def nuclei_results2(request, nuclei_results_id):
     nuclei_triggers = NucleiTrigger.objects.filter(NucleiScan=nuclei_results_id)
     return render(request, 'main/nuclei_results.html', {'title':f'Результаты {nuclei_results_id}', 'nuclei_triggers':nuclei_triggers })
 
-@login_required
-@ratelimit(key='user', rate='3/m')
 def ssrf(request):
     url = request.GET.get('url')
     requests.get(url)
-    nuclei_scans = NucleiScan.objects.order_by('-id')
-    print(len(nuclei_scans))
     return render(request, 'main/ssrf.html')
 
 @login_required
